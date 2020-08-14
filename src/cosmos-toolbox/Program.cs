@@ -1,12 +1,16 @@
 ﻿using System;
+using System.Threading.Tasks;
+using CosmosToolbox.App;
 
-namespace cosmos_toolbox
+namespace CosmosToolbox
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            // TODO: setup using DI
+            var app = new Application();
+            await app.RunAsync(args);
         }
     }
 }
