@@ -53,7 +53,7 @@ namespace CosmosToolbox.App.Options
                         {
                             Id = "<Container Id>",
                             Throughput = null,
-                            PartitionKey = "<e.g. /addres>"
+                            PartitionKey = "<(e.g. /addres/zipCode)>"
                         }
                     }
                 }

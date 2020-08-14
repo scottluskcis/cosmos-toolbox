@@ -1,4 +1,7 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
+using CosmosToolbox.App.Strategy;
 
 namespace CosmosToolbox.App
 {
@@ -9,9 +12,25 @@ namespace CosmosToolbox.App
 
     public class Application : ICosmosToolboxApplication
     {
-        public Task RunAsync(string[] args)
+        private readonly IEnumerable<IAppStrategy> _strategies;
+
+        public Application()
         {
-            throw new System.NotImplementedException();
+            // TODO: inject this via DI
+            _strategies = new [] 
+            {
+                new InitOptionsStrategy()
+            };
+        }
+
+        public async Task RunAsync(string[] args)
+        {
+            var strategiesToRun = _strategies
+                .Where(p => p.IsApplicable("some arg"))
+                .OrderBy(o => o.Order)
+                .Select(s => s.RunAsync(args));
+            
+            await Task.WhenAll(strategiesToRun);
         }
     }
 }
