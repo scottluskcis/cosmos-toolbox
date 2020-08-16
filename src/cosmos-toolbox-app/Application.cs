@@ -23,10 +23,10 @@ namespace CosmosToolbox.App
         {
             var strategiesToRun = _strategies
                 .Where(p => p.IsApplicable(args))
-                .OrderBy(o => o.Order)
-                .Select(s => s.RunAsync(args));
+                .OrderBy(o => o.Order);
             
-            await Task.WhenAll(strategiesToRun);
+            foreach(var strategy in strategiesToRun)
+                await strategy.RunAsync(args);
         }
     }
 }

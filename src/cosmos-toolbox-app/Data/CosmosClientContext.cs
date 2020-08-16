@@ -261,10 +261,18 @@ namespace CosmosToolbox.App.Data
         public async Task<Container> CreateContainerIfNotExistsAsync<TEntity>(CancellationToken cancellationToken = default)
             where TEntity : BaseEntity
         {
+            var props = typeof(TEntity).GetContainerProperties();
+            var container = await CreateContainerIfNotExistsAsync(props.Id, props.PartitionKeyPath, cancellationToken);
+
+            return container;
+        }
+
+        public async Task<Container> CreateContainerIfNotExistsAsync(string containerId, string partitionKeyPath, CancellationToken cancellationToken = default)
+        {
             _logger.LogInformation("{Action} - Start", nameof(CreateContainerIfNotExistsAsync));
 
             var database = await CreateDatabaseIfNotExistsAsync(_options.Database.Id, _options.Database.Throughput, cancellationToken); 
-            var props = typeof(TEntity).GetContainerProperties();
+            var props = new ContainerProperties(containerId, partitionKeyPath);
 
             var containerResponse = await database.CreateContainerIfNotExistsAsync(props, cancellationToken: cancellationToken);
             _logger.LogContainerResponse(containerResponse);
@@ -276,7 +284,7 @@ namespace CosmosToolbox.App.Data
             return container;
         }
 
-        private async Task<Database> CreateDatabaseIfNotExistsAsync(string databaseId, int? throughput = null, CancellationToken cancellationToken = default)
+        public async Task<Database> CreateDatabaseIfNotExistsAsync(string databaseId, int? throughput = null, CancellationToken cancellationToken = default)
         {
             _logger.LogDebug("{Action} - Start", nameof(CreateDatabaseIfNotExistsAsync));
 

@@ -14,7 +14,8 @@ namespace CosmosToolbox.App
             services.AddSingleton<IClientContext, CosmosClientContext>();
             
             services.AddTransient<IOptionsService, OptionsService>();
-            services.AddTransient<IAppStrategy, InitOptionsStrategy>();
+            services.AddTransient<IAppStrategy, CreateContainersStrategy>();
+            services.AddTransient<IAppStrategy, ValidateOptionsStrategy>();
             services.AddSingleton<ICosmosToolboxApplication, Application>();
         }
     }
