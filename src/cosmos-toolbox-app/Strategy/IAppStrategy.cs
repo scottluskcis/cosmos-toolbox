@@ -6,8 +6,8 @@ namespace CosmosToolbox.App.Strategy
     {
         int Order { get; }
         
-        bool IsApplicable(string arg);
+        bool IsApplicable(IApplicationArgs args);
 
-        Task RunAsync(string[] args);
+        Task RunAsync(IApplicationArgs args);
     }
 }

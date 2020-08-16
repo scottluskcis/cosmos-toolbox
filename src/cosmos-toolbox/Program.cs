@@ -1,85 +1,50 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Configuration;
+using CommandLine;
 using CosmosToolbox.App;
-using System.IO;
-using CosmosToolbox.Core.IoC;
 
 namespace CosmosToolbox
 {
     class Program
     {
-        private static IConfigurationRoot _configuration;
-        private static IServiceProvider _serviceProvider;
-
         static async Task Main(string[] args)
         {
+            await Parser.Default.ParseArguments<ProgramOptions>(args)
+                .MapResult(RunAsync, _ => Task.FromResult(1));
+        }
+
+        static async Task<int> RunAsync(ProgramOptions opts)
+        {
+            int exitCode = 0;
             try
             {
-                BuildConfiguration();
-                RegisterServices();
+                Console.WriteLine(opts.ToString());
 
-                var service = _serviceProvider.GetRequiredService<ICosmosToolboxApplication>();
-                await service.RunAsync(args);
+                Console.WriteLine("Executing...");
+
+                var service = AppServicesProvider.Instance.GetRequiredService<ICosmosToolboxApplication>();
+                await service.RunAsync(opts);
+
+                if (opts.PauseBeforeExit)
+                {
+                    Console.WriteLine("Execution Finished, Press any key to quit...");
+                    Console.ReadKey();
+                }
             }
             catch (Exception ex)
             {
+                exitCode = opts.ErrorStatusCode;
                 Console.WriteLine(ex.ToString());
+
+                if (opts.PauseBeforeExit)
+                    Console.ReadKey();
             }
             finally
             {
-                DisposeServices();
+                AppServicesProvider.Instance.Dispose();
+                Environment.ExitCode = exitCode;
             }
-
-            Console.ReadKey();
-        }
-
-        private static void BuildConfiguration()
-        {
-            var environmentName = Environment.GetEnvironmentVariable("ENVIRONMENT");
-
-            var builder = new ConfigurationBuilder()
-               .SetBasePath(Directory.GetCurrentDirectory())
-               .AddJsonFile("appsettings.json", false)
-               .AddJsonFile($"appsettings.{environmentName}.json", true)
-               .AddEnvironmentVariables();
-
-            _configuration = builder.Build();
-        }
-
-        private static void RegisterServices()
-        {
-            var collection = new ServiceCollection();
-
-            collection.AddLogging((logging) =>
-            {
-                logging.AddConsole();
-            });
-
-            var modules = new IPackageModule[]
-            {
-                new CosmosToolbox.Core.PackageModule(),
-                new CosmosToolbox.App.PackageModule()
-            };
-
-            foreach(var module in modules)
-                module.RegisterServices(collection);
-                
-            _serviceProvider = collection.BuildServiceProvider();
-        }
-
-        private static void DisposeServices()
-        {
-            if (_serviceProvider == null)
-            {
-                return;
-            }
-            if (_serviceProvider is IDisposable)
-            {
-                ((IDisposable)_serviceProvider).Dispose();
-            }
+            return exitCode;
         }
     }
 }
