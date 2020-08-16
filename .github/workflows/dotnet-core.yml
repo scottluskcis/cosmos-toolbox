@@ -10,6 +10,8 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    env:
+      sln-file: src/CosmosToolbox.sln
 
     steps:
     - uses: actions/checkout@v2
@@ -18,8 +20,8 @@ jobs:
       with:
         dotnet-version: 3.1.301
     - name: Install dependencies
-      run: dotnet restore
+      run: dotnet restore ${{env.sln-file}}
     - name: Build
-      run: dotnet build --configuration Release --no-restore
+      run: dotnet build ${{env.sln-file}} --configuration Release --no-restore
     - name: Test
-      run: dotnet test --no-restore --verbosity normal
+      run: dotnet test ${{env.sln-file}} --no-restore --verbosity normal
