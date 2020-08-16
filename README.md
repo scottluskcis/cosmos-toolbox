@@ -1,5 +1,7 @@
 # cosmos-toolbox
 
+![.NET Core](https://github.com/scottluskcis/cosmos-toolbox/workflows/.NET%20Core/badge.svg)
+
 Toolbox to assist with a variety of Cosmos DB needs:
 
 * Create database
