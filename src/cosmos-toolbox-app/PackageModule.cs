@@ -1,5 +1,7 @@
+using CosmosToolbox.App.Data;
 using CosmosToolbox.App.Options;
 using CosmosToolbox.App.Strategy;
+using CosmosToolbox.Core.Data;
 using CosmosToolbox.Core.IoC;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,6 +11,8 @@ namespace CosmosToolbox.App
     {
         public void RegisterServices(IServiceCollection services)
         {
+            services.AddSingleton<IClientContext, CosmosClientContext>();
+            
             services.AddTransient<IOptionsService, OptionsService>();
             services.AddTransient<IAppStrategy, InitOptionsStrategy>();
             services.AddSingleton<ICosmosToolboxApplication, Application>();

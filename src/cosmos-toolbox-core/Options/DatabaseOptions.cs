@@ -5,7 +5,7 @@ namespace CosmosToolbox.Core.Options
     /// <summary>
     /// options used to configure a Cosmos Database
     /// </summary>
-    public class DatabaseOptions
+    public sealed class DatabaseOptions
     {
         /// <summary>
         /// Database Id

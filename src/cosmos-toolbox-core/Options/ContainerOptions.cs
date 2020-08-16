@@ -3,10 +3,10 @@ namespace CosmosToolbox.Core.Options
     /// <summary>
     /// options used to configure a Cosmos Container
     /// </summary>
-    public class ContainerOptions
+    public sealed class ContainerOptions
     {
         /// <summary>
-        /// container id    
+        /// container id
         /// </summary>
         /// <value></value>
         public string Id { get; set; }
