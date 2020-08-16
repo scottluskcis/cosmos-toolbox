@@ -7,7 +7,7 @@ namespace CosmosToolbox.App
 {
     public interface ICosmosToolboxApplication
     {
-        Task RunAsync(string[] args);
+        Task RunAsync(IApplicationArgs args);
     }
 
     public class Application : ICosmosToolboxApplication
@@ -19,10 +19,10 @@ namespace CosmosToolbox.App
             _strategies = strategies;
         }
 
-        public async Task RunAsync(string[] args)
+        public async Task RunAsync(IApplicationArgs args)
         {
             var strategiesToRun = _strategies
-                .Where(p => p.IsApplicable("some arg"))
+                .Where(p => p.IsApplicable(args))
                 .OrderBy(o => o.Order)
                 .Select(s => s.RunAsync(args));
             
