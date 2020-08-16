@@ -14,13 +14,9 @@ namespace CosmosToolbox.App
     {
         private readonly IEnumerable<IAppStrategy> _strategies;
 
-        public Application()
+        public Application(IEnumerable<IAppStrategy> strategies)
         {
-            // TODO: inject this via DI
-            _strategies = new [] 
-            {
-                new InitOptionsStrategy()
-            };
+            _strategies = strategies;
         }
 
         public async Task RunAsync(string[] args)
