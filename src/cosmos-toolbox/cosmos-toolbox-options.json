@@ -1,0 +1,13 @@
+{
+  "database": {
+    "id": "<Database Id>",
+    "throughput": 400,
+    "containers": [
+      {
+        "id": "<Container Id>",
+        "throughput": null,
+        "partitionKey": "<(e.g. /addres/zipCode)>"
+      }
+    ]
+  }
+}

@@ -20,11 +20,16 @@ namespace CosmosToolbox
             {
                 Console.WriteLine(opts.ToString());
 
+                Console.WriteLine("Executing...");
+
                 var service = AppServicesProvider.Instance.GetRequiredService<ICosmosToolboxApplication>();
                 await service.RunAsync(opts);
 
                 if (opts.PauseBeforeExit)
+                {
+                    Console.WriteLine("Execution Finished, Press any key to quit...");
                     Console.ReadKey();
+                }
             }
             catch (Exception ex)
             {
