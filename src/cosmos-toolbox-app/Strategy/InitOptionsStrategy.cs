@@ -7,10 +7,9 @@ namespace CosmosToolbox.App.Strategy
     {
         private readonly IOptionsService _service;
 
-        public InitOptionsStrategy()
+        public InitOptionsStrategy(IOptionsService service)
         {
-            // TODO: inject this via DI
-            _service = new OptionsService();
+            _service = service;
         }
 
         public int Order => 1;
