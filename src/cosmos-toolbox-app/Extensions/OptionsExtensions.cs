@@ -40,7 +40,13 @@ namespace CosmosToolbox.App.Extensions
 
         public static void Validate(this ClientContextOptions options)
         {
+            if (options == null)
+                throw new ArgumentNullException(nameof(options));
 
+            if (options.Database == null)
+                throw new ArgumentNullException(nameof(options.Database));
+
+            options.Database.Validate();
         }
     }
 }

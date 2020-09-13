@@ -7,7 +7,7 @@ namespace CosmosToolbox.App
     public class AppSettings
     {
         public static Lazy<JsonSerializerSettings> JsonSerializerSettings = 
-            new Lazy<JsonSerializerSettings>(() => GetDefaultSerializerSettings());
+            new Lazy<JsonSerializerSettings>(GetDefaultSerializerSettings);
 
         private static JsonSerializerSettings GetDefaultSerializerSettings()
         {

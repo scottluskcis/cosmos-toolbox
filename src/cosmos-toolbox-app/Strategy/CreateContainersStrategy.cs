@@ -12,14 +12,14 @@ namespace CosmosToolbox.App.Strategy
 {
     public sealed class CreateContainersStrategy : IAppStrategy
     {
-        private readonly ClientContextOptions _options;
-        private readonly IClientContext _context;
+        private readonly ClientContextOptionsGroup _options;
+        private readonly IClientContextFactory _factory;
         private readonly ILogger _logger;
 
-        public CreateContainersStrategy(IOptions<ClientContextOptions> options, IClientContext context, ILogger<CreateContainersStrategy> logger)
+        public CreateContainersStrategy(IOptions<ClientContextOptionsGroup> options, IClientContextFactory factory, ILogger<CreateContainersStrategy> logger)
         {
             _options = options?.Value;
-            _context = context;
+            _factory = factory;
             _logger = logger;
         }
 
@@ -32,22 +32,30 @@ namespace CosmosToolbox.App.Strategy
 
         public async Task RunAsync(IApplicationArgs args)
         {
-            _options.Validate();
+            foreach (var options in _options.Databases)
+                await RunAsync(options, args);
+        }
 
-            if (!(_context is CosmosClientContext cosmosClientContext))
+        private async Task RunAsync(ClientContextOptions options, IApplicationArgs args)
+        { 
+            options.Validate();
+
+            var context = _factory.Create(options);
+
+            if (!(context is CosmosClientContext cosmosClientContext))
                 throw new NotSupportedException($"Context must be of type {nameof(CosmosClientContext)} to perform this operation");
 
             if (args.CreateDatabase)
             {
-                _logger.LogInformation($"creating database {_options.Database.Id}");
-                await cosmosClientContext.CreateDatabaseIfNotExistsAsync(_options.Database.Id, _options.Database.Throughput);
+                _logger.LogInformation($"creating database {options.Database.Id}");
+                await cosmosClientContext.CreateDatabaseIfNotExistsAsync(options.Database.Id, options.Database.Throughput);
             }
 
             if(args.CreateContainers)
             {
                 _logger.LogInformation("creating containers");
                 
-                var containerTasks = _options
+                var containerTasks = options
                     .Database.Containers
                     .Select(c => cosmosClientContext.CreateContainerIfNotExistsAsync(c.Id, c.PartitionKey));
 
