@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Linq;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using CosmosToolbox.Core.Data;
 using CosmosToolbox.App.Extensions;
 using CosmosToolbox.Core.Options;
@@ -19,9 +18,9 @@ namespace CosmosToolbox.App.Data
         private readonly ClientContextOptions _options;  
         private readonly ILogger _logger;
 
-        public CosmosClientContext(IOptions<ClientContextOptions> options, ILogger<CosmosClientContext> logger)
+        public CosmosClientContext(ClientContextOptions options, ILogger<CosmosClientContext> logger)
         {
-            _options = options?.Value;
+            _options = options;
             _logger = logger;
         }
 

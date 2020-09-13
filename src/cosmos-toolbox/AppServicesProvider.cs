@@ -54,7 +54,7 @@ namespace CosmosToolbox
                 logging.AddConsole();
             });
 
-            collection.AddOptions<ClientContextOptions>()
+            collection.AddOptions<ClientContextOptionsGroup>()
                 .Bind(_configuration.GetSection("CosmosDb"));
 
             var modules = new IPackageModule[]

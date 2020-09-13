@@ -2,6 +2,7 @@ using CosmosToolbox.Core.Options;
 using Newtonsoft.Json;
 using System.IO;
 using System.Threading.Tasks;
+using CosmosToolbox.Core.Enums;
 
 namespace CosmosToolbox.App.Options
 {
@@ -47,6 +48,7 @@ namespace CosmosToolbox.App.Options
                 {
                     Id = "<Database Id>",
                     Throughput = 400,
+                    Api = DatabaseApi.SqlApi,
                     Containers = new [] 
                     {
                         new ContainerOptions

@@ -11,7 +11,7 @@ namespace CosmosToolbox.App
     {
         public void RegisterServices(IServiceCollection services)
         {
-            services.AddSingleton<IClientContext, CosmosClientContext>();
+            services.AddSingleton<IClientContextFactory, CosmosClientContextFactory>();
             
             services.AddTransient<IOptionsService, OptionsService>();
             services.AddTransient<IAppStrategy, CreateContainersStrategy>();
