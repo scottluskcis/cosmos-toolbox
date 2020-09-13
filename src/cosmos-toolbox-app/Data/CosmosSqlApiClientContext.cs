@@ -301,12 +301,13 @@ namespace CosmosToolbox.App.Data
 
         private CosmosClient GetClient()
         {
-            if(_client == null) 
-            {
-                _logger.LogDebug("creating CosmosClient");
-                _client = _options.CreateCosmosClient() ?? throw new InvalidOperationException("failed to create a CosmosClient");
-                _logger.LogDebug("created CosmosClient successfully");
-            }
+            if (_client != null) return _client;
+            
+            _logger.LogDebug($"creating {nameof(CosmosClient)}");
+            _client = _options.CreateCosmosClient() ?? throw new InvalidOperationException($"failed to create a {nameof(CosmosClient)}");
+            
+            _logger.LogDebug($"created {nameof(CosmosClient)} successfully");
+            
             return _client;
         }
 

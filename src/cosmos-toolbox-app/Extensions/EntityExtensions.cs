@@ -29,6 +29,15 @@ namespace CosmosToolbox.App.Extensions
             var partitionKey = value != null ? new PartitionKey(value) : PartitionKey.Null;
             return partitionKey;
         }
-        
+
+        public static string GetTableName(this Type type)
+        {
+            var attribute = type
+                .GetCustomAttributes(typeof(TableEntityAttribute), true)
+                .OfType<TableEntityAttribute>()
+                .Single();
+
+            return attribute.TableName;
+        }
     }
 }
