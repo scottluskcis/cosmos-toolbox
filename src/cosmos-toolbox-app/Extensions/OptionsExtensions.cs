@@ -12,8 +12,7 @@ namespace CosmosToolbox.App.Extensions
             options.Validate();
 
             var clientBuilder = new CosmosClientBuilder(
-                options.EndpointUri,
-                options.PrimaryKey);
+                options.ConnectionString);
                         
             if (options.UseThrottling) 
                 clientBuilder = clientBuilder
@@ -42,6 +41,9 @@ namespace CosmosToolbox.App.Extensions
         {
             if (options == null)
                 throw new ArgumentNullException(nameof(options));
+
+            if (string.IsNullOrEmpty(options.ConnectionString))
+                throw new ArgumentNullException(nameof(options.ConnectionString));
 
             if (options.Database == null)
                 throw new ArgumentNullException(nameof(options.Database));
