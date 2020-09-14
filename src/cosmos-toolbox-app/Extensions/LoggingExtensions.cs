@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Logging;
 using CosmosToolbox.App.Data;
+using Microsoft.Azure.Cosmos.Table;
 
 namespace CosmosToolbox.App.Extensions
 {
@@ -56,6 +58,21 @@ namespace CosmosToolbox.App.Extensions
                 response.TotalRequestUnitsConsumed,
                 response.Successes.Count,
                 response.Failures.Count);
+        }
+
+        public static void LogTableResultInformation(this ILogger logger, TableResult tableResult, string message = null, string operation = null)
+        {
+            if (tableResult == null)
+                return;
+            
+            logger.LogInformation(message ?? "TableResult", new Dictionary<string, object>
+            {
+                { "StatusCode", tableResult.HttpStatusCode },
+                { "ETag", tableResult.Etag },
+                { "Operation", $"TableOperation {operation}" },
+                { "RequestCharge", tableResult.RequestCharge },
+                { "ActivityId", tableResult.ActivityId }
+            });
         }
     }
 }

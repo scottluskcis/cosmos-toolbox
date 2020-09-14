@@ -35,7 +35,9 @@ namespace CosmosToolbox.App.Data
             options.Validate();
 
             if (options.Database.Api.Equals(DatabaseApi.SqlApi))
-                return new CosmosClientContext(options, _loggerFactory.CreateLogger<CosmosClientContext>());
+                return new CosmosSqlApiClientContext(options, _loggerFactory.CreateLogger<CosmosSqlApiClientContext>());
+            else if(options.Database.Api.Equals(DatabaseApi.TableApi))
+                return new CosmosTableApiClientContext(options, _loggerFactory.CreateLogger<CosmosTableApiClientContext>());
             else 
                 throw new NotSupportedException($"api '{options.Database.Api}' is not currently supported in {nameof(CosmosClientContextFactory)}");
         }

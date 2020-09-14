@@ -13,12 +13,16 @@ using CosmosToolbox.Core.Options;
 
 namespace CosmosToolbox.App.Data
 {
-    public sealed class CosmosClientContext : IClientContext, IBulkExecutorClientContext, IDisposable
+    public sealed class CosmosSqlApiClientContext : 
+        IClientContext, 
+        IBulkExecutorClientContext, 
+        IQueryClientContext, 
+        IDisposable
     {
         private readonly ClientContextOptions _options;  
         private readonly ILogger _logger;
 
-        public CosmosClientContext(ClientContextOptions options, ILogger<CosmosClientContext> logger)
+        public CosmosSqlApiClientContext(ClientContextOptions options, ILogger<CosmosSqlApiClientContext> logger)
         {
             _options = options;
             _logger = logger;
@@ -301,12 +305,13 @@ namespace CosmosToolbox.App.Data
 
         private CosmosClient GetClient()
         {
-            if(_client == null) 
-            {
-                _logger.LogDebug("creating CosmosClient");
-                _client = _options.CreateCosmosClient() ?? throw new InvalidOperationException("failed to create a CosmosClient");
-                _logger.LogDebug("created CosmosClient successfully");
-            }
+            if (_client != null) return _client;
+            
+            _logger.LogDebug($"creating {nameof(CosmosClient)}");
+            _client = _options.CreateCosmosClient() ?? throw new InvalidOperationException($"failed to create a {nameof(CosmosClient)}");
+            
+            _logger.LogDebug($"created {nameof(CosmosClient)} successfully");
+            
             return _client;
         }
 

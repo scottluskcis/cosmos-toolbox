@@ -42,8 +42,8 @@ namespace CosmosToolbox.App.Strategy
 
             var context = _factory.Create(options);
 
-            if (!(context is CosmosClientContext cosmosClientContext))
-                throw new NotSupportedException($"Context must be of type {nameof(CosmosClientContext)} to perform this operation");
+            if (!(context is CosmosSqlApiClientContext cosmosClientContext))
+                throw new NotSupportedException($"Context must be of type {nameof(CosmosSqlApiClientContext)} to perform this operation");
 
             if (args.CreateDatabase)
             {
