@@ -23,6 +23,8 @@ namespace CosmosToolbox.Core.Options
         public TimeSpan? MaxRetryWaitTimeOnThrottledRequests { get; set; } 
         public int? MaxRetryAttemptsOnThrottledRequests { get; set; }
 
+        public string SeedDataPath { get; set; }
+
         public string GetContextIdentifier()
         {
             return $"{Database?.Api}_{Database?.Id}";

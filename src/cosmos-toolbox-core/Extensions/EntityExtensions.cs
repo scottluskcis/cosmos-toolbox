@@ -7,7 +7,7 @@ namespace CosmosToolbox.Core.Extensions
 {
     public static class EntityExtensions
     {
-        public static string GetPartitionKeyValue(this BaseEntity entity)
+        public static string GetPartitionKeyValue(this IEntity entity)
         {
             var type = entity.GetType();
             

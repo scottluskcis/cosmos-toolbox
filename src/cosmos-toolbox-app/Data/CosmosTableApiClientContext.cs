@@ -24,7 +24,7 @@ namespace CosmosToolbox.App.Data
         }
 
         public async Task<TEntity> CreateItemAsync<TEntity>(TEntity item, CancellationToken cancellationToken = default) 
-            where TEntity : BaseEntity
+            where TEntity : class, IEntity
         {
             var tableEntity = GetTableEntity(item);
             var operation = TableOperation.InsertOrMerge(tableEntity);
@@ -32,14 +32,14 @@ namespace CosmosToolbox.App.Data
             return result;
         }
         
-        public async Task<TEntity> ReadItemAsync<TEntity>(string id, string partitionKey, CancellationToken cancellationToken = default) where TEntity : BaseEntity
+        public async Task<TEntity> ReadItemAsync<TEntity>(string id, string partitionKey, CancellationToken cancellationToken = default) where TEntity : class, IEntity
         {
             var retrieveOperation = TableOperation.Retrieve(partitionKey, id);
             var result = await ExecuteAsync<TEntity>(retrieveOperation, cancellationToken);
             return result;
         }
 
-        public async Task<TEntity> ReplaceItemAsync<TEntity>(TEntity item, CancellationToken cancellationToken = default) where TEntity : BaseEntity
+        public async Task<TEntity> ReplaceItemAsync<TEntity>(TEntity item, CancellationToken cancellationToken = default) where TEntity : class, IEntity
         {
             var tableEntity = GetTableEntity(item);
             var operation = TableOperation.Replace(tableEntity);
@@ -47,7 +47,7 @@ namespace CosmosToolbox.App.Data
             return result;
         }
 
-        public async Task<TEntity> UpsertItemAsync<TEntity>(TEntity item, CancellationToken cancellationToken = default) where TEntity : BaseEntity
+        public async Task<TEntity> UpsertItemAsync<TEntity>(TEntity item, CancellationToken cancellationToken = default) where TEntity : class, IEntity
         {
             var tableEntity = GetTableEntity(item);
             var operation = TableOperation.InsertOrMerge(tableEntity);
@@ -55,7 +55,7 @@ namespace CosmosToolbox.App.Data
             return result;
         }
 
-        public async Task<TEntity> DeleteItemAsync<TEntity>(string id, string partitionKey, CancellationToken cancellationToken = default) where TEntity : BaseEntity
+        public async Task<TEntity> DeleteItemAsync<TEntity>(string id, string partitionKey, CancellationToken cancellationToken = default) where TEntity : class, IEntity
         {
             var retrieveOperation = TableOperation.Retrieve(partitionKey, id);
             var result = await ExecuteAsync<TEntity>(retrieveOperation, cancellationToken);
@@ -76,7 +76,7 @@ namespace CosmosToolbox.App.Data
             Expression<Func<TEntity, bool>> predicate = null, 
             string partitionKey = "",
             CancellationToken cancellationToken = default) 
-            where TEntity : BaseEntity, ITableEntity, new()
+            where TEntity : class, ITableEntity, new()
         {
             var tableName = GetTableName<TEntity>();
             var table = GetCloudTable(tableName);
@@ -102,7 +102,7 @@ namespace CosmosToolbox.App.Data
         }
 
         private async Task<TEntity> ExecuteAsync<TEntity>(TableOperation operation, CancellationToken cancellationToken = default)
-            where TEntity : BaseEntity
+            where TEntity : class, IEntity
         {
             var tableName = GetTableName<TEntity>();
             var operationName = operation.OperationType.ToString();
@@ -143,7 +143,6 @@ namespace CosmosToolbox.App.Data
         }
 
         private string GetTableName<TEntity>()
-            where TEntity : BaseEntity
         {
             return typeof(TEntity).GetTableName();
         }
