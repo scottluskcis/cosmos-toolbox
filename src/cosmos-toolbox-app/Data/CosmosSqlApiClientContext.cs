@@ -13,7 +13,11 @@ using CosmosToolbox.Core.Options;
 
 namespace CosmosToolbox.App.Data
 {
-    public sealed class CosmosSqlApiClientContext : IClientContext, IBulkExecutorClientContext, IDisposable
+    public sealed class CosmosSqlApiClientContext : 
+        IClientContext, 
+        IBulkExecutorClientContext, 
+        IQueryClientContext, 
+        IDisposable
     {
         private readonly ClientContextOptions _options;  
         private readonly ILogger _logger;

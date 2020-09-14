@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ using Microsoft.Extensions.Logging;
 
 namespace CosmosToolbox.App.Data
 {
-    public sealed class CosmosTableApiClientContext : IClientContext, IDisposable
+    public sealed class CosmosTableApiClientContext : ITableClientContext, IDisposable
     {
         private readonly ClientContextOptions _options;  
         private readonly ILogger _logger;
@@ -25,9 +26,7 @@ namespace CosmosToolbox.App.Data
         public async Task<TEntity> CreateItemAsync<TEntity>(TEntity item, CancellationToken cancellationToken = default) 
             where TEntity : BaseEntity
         {
-            if (!(item is ITableEntity tableEntity))
-                throw new InvalidOperationException($"specified item must implement interface '{nameof(ITableEntity)}'");
-
+            var tableEntity = GetTableEntity(item);
             var operation = TableOperation.InsertOrMerge(tableEntity);
             var result = await ExecuteAsync<TEntity>(operation, cancellationToken);
             return result;
@@ -35,33 +34,71 @@ namespace CosmosToolbox.App.Data
         
         public async Task<TEntity> ReadItemAsync<TEntity>(string id, string partitionKey, CancellationToken cancellationToken = default) where TEntity : BaseEntity
         {
-            throw new NotImplementedException();
+            var retrieveOperation = TableOperation.Retrieve(partitionKey, id);
+            var result = await ExecuteAsync<TEntity>(retrieveOperation, cancellationToken);
+            return result;
         }
 
         public async Task<TEntity> ReplaceItemAsync<TEntity>(TEntity item, CancellationToken cancellationToken = default) where TEntity : BaseEntity
         {
-            throw new NotImplementedException();
+            var tableEntity = GetTableEntity(item);
+            var operation = TableOperation.Replace(tableEntity);
+            var result = await ExecuteAsync<TEntity>(operation, cancellationToken);
+            return result;
         }
 
         public async Task<TEntity> UpsertItemAsync<TEntity>(TEntity item, CancellationToken cancellationToken = default) where TEntity : BaseEntity
         {
-            throw new NotImplementedException();
+            var tableEntity = GetTableEntity(item);
+            var operation = TableOperation.InsertOrMerge(tableEntity);
+            var result = await ExecuteAsync<TEntity>(operation, cancellationToken);
+            return result;
         }
 
         public async Task<TEntity> DeleteItemAsync<TEntity>(string id, string partitionKey, CancellationToken cancellationToken = default) where TEntity : BaseEntity
         {
-            throw new NotImplementedException();
+            var retrieveOperation = TableOperation.Retrieve(partitionKey, id);
+            var result = await ExecuteAsync<TEntity>(retrieveOperation, cancellationToken);
+
+            if (result == null)
+            {
+                throw new ArgumentException($"unable to find an existing record in table using partition key {partitionKey} and row key {id}");
+            }
+
+            var tableEntity = GetTableEntity(result);
+            var deleteOperation = TableOperation.Delete(tableEntity);
+            var deleteResult = await ExecuteAsync<TEntity>(deleteOperation, cancellationToken);
+
+            return deleteResult;
         }
 
-        public async Task<IEnumerable<TEntity>> ReadItemsAsync<TEntity>(Expression<Func<TEntity, bool>> predicate = null, string partitionKey = "",
-            CancellationToken cancellationToken = default) where TEntity : BaseEntity
+        public Task<IEnumerable<TEntity>> ReadItemsAsync<TEntity>(
+            Expression<Func<TEntity, bool>> predicate = null, 
+            string partitionKey = "",
+            CancellationToken cancellationToken = default) 
+            where TEntity : BaseEntity, ITableEntity, new()
         {
-            throw new NotImplementedException();
+            var tableName = GetTableName<TEntity>();
+            var table = GetCloudTable(tableName);
+
+            var query = table.CreateQuery<TEntity>()
+                .Where(p => string.IsNullOrEmpty(partitionKey) || p.PartitionKey == partitionKey);
+
+            if (predicate != null)
+                query = query.Where(predicate);
+
+            var result = query.AsEnumerable();
+            return Task.FromResult(result);
         }
 
-        public async Task<IEnumerable<TEntity>> QueryItemsAsync<TEntity>(string sql, string partitionKey = "", CancellationToken cancellationToken = default) where TEntity : BaseEntity
+        private ITableEntity GetTableEntity<TEntity>(TEntity entity)
         {
-            throw new NotImplementedException();
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+            if (!(entity is ITableEntity tableEntity))
+                throw new InvalidOperationException($"type {entity.GetType().Name} is not convertible to type {nameof(ITableEntity)}");
+
+            return tableEntity;
         }
 
         private async Task<TEntity> ExecuteAsync<TEntity>(TableOperation operation, CancellationToken cancellationToken = default)
@@ -90,7 +127,6 @@ namespace CosmosToolbox.App.Data
             }
         }
 
-        
         public async Task<CloudTable> CreateTableIfNotExistsAsync(string tableName, int? throughput, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation("{Action} - Start", nameof(CreateTableIfNotExistsAsync));

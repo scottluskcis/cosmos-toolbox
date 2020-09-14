@@ -20,9 +20,9 @@ namespace CosmosToolbox.App.Extensions
                         options.MaxRetryWaitTimeOnThrottledRequests ?? new TimeSpan(0, 0, 0, 30),
                         options.MaxRetryAttemptsOnThrottledRequests ?? 3);
 
-            if (Enum.TryParse<ConsistencyLevel>(options.ConsistencyLevel, out var consistencyLevel))
-                clientBuilder = clientBuilder
-                    .WithConsistencyLevel(consistencyLevel);
+            //if (Enum.TryParse<ConsistencyLevel>(options.ConsistencyLevel, out var consistencyLevel))
+            //    clientBuilder = clientBuilder
+            //        .WithConsistencyLevel(consistencyLevel);
 
             if (options.AllowBulkExecution.HasValue)
                 clientBuilder = clientBuilder

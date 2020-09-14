@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CosmosToolbox.Core.Data
 {
-    public interface IReadOnlyClientContext
+    public interface IClientContext
     {
         Task<TEntity> ReadItemAsync<TEntity>(
             string id,
@@ -14,21 +14,6 @@ namespace CosmosToolbox.Core.Data
             CancellationToken cancellationToken = default)
             where TEntity : BaseEntity;
 
-        Task<IEnumerable<TEntity>> ReadItemsAsync<TEntity>(
-            Expression<Func<TEntity, bool>> predicate = null,
-            string partitionKey = "",
-            CancellationToken cancellationToken = default)
-            where TEntity : BaseEntity;
-
-        Task<IEnumerable<TEntity>> QueryItemsAsync<TEntity>(
-            string sql,
-            string partitionKey = "",
-            CancellationToken cancellationToken = default)
-            where TEntity : BaseEntity;
-    }
-
-    public interface IClientContext : IReadOnlyClientContext
-    {
         Task<TEntity> CreateItemAsync<TEntity>(
             TEntity item,
             CancellationToken cancellationToken = default)
@@ -50,8 +35,23 @@ namespace CosmosToolbox.Core.Data
             CancellationToken cancellationToken = default)
             where TEntity : BaseEntity;
     }
+    
+    public interface IQueryClientContext
+    {
+        Task<IEnumerable<TEntity>> ReadItemsAsync<TEntity>(
+            Expression<Func<TEntity, bool>> predicate = null,
+            string partitionKey = "",
+            CancellationToken cancellationToken = default)
+            where TEntity : BaseEntity;
 
-    public interface IBulkExecutorClientContext : IReadOnlyClientContext
+        Task<IEnumerable<TEntity>> QueryItemsAsync<TEntity>(
+            string sql,
+            string partitionKey = "",
+            CancellationToken cancellationToken = default)
+            where TEntity : BaseEntity;
+    }
+
+    public interface IBulkExecutorClientContext
     {
         Task<IEnumerable<TEntity>> BulkCreateItemsAsync<TEntity>(
             IList<TEntity> entities)
