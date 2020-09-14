@@ -42,24 +42,42 @@ namespace CosmosToolbox.App.Strategy
 
             var context = _factory.Create(options);
 
-            if (!(context is CosmosSqlApiClientContext cosmosClientContext))
-                throw new NotSupportedException($"Context must be of type {nameof(CosmosSqlApiClientContext)} to perform this operation");
-
-            if (args.CreateDatabase)
+            if (context is CosmosSqlApiClientContext sqlApiClientContext)
             {
-                _logger.LogInformation($"creating database {options.Database.Id}");
-                await cosmosClientContext.CreateDatabaseIfNotExistsAsync(options.Database.Id, options.Database.Throughput);
+                if (args.CreateDatabase)
+                {
+                    _logger.LogInformation($"creating database {options.Database.Id}");
+                    await sqlApiClientContext.CreateDatabaseIfNotExistsAsync(options.Database.Id,
+                        options.Database.Throughput);
+                }
+
+                if (args.CreateContainers)
+                {
+                    _logger.LogInformation("creating containers");
+
+                    var containerTasks = options
+                        .Database.Containers
+                        .Select(container => sqlApiClientContext.CreateContainerIfNotExistsAsync(container.Id, container.PartitionKey));
+
+                    await Task.WhenAll(containerTasks);
+                }
             }
-
-            if(args.CreateContainers)
+            else if (context is CosmosTableApiClientContext tableApiClientContext)
             {
-                _logger.LogInformation("creating containers");
-                
-                var containerTasks = options
-                    .Database.Containers
-                    .Select(c => cosmosClientContext.CreateContainerIfNotExistsAsync(c.Id, c.PartitionKey));
+                if (args.CreateContainers)
+                {
+                    _logger.LogInformation("creating tables");
 
-                await Task.WhenAll(containerTasks);
+                    var tableTasks = options
+                        .Database.Containers
+                        .Select(table => tableApiClientContext.CreateTableIfNotExistsAsync(table.Id, table.Throughput));
+
+                    await Task.WhenAll(tableTasks);
+                }
+            }
+            else
+            {
+                throw new NotSupportedException($"no valid client context could be found to perform this operation");
             }
         }
     }

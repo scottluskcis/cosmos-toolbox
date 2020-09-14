@@ -13,6 +13,6 @@ namespace CosmosToolbox.App.Data
         Task<IEnumerable<TEntity>> ReadItemsAsync<TEntity>(
             Expression<Func<TEntity, bool>> predicate, string partitionKey,
             CancellationToken cancellationToken)
-            where TEntity : BaseEntity, ITableEntity, new();
+            where TEntity : class, ITableEntity, new();
     }
 }

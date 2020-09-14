@@ -31,7 +31,7 @@ namespace CosmosToolbox.App.Data
         public async Task<TEntity> CreateItemAsync<TEntity>(
             TEntity item, 
             CancellationToken cancellationToken = default)
-            where TEntity : BaseEntity
+            where TEntity : class, IEntity
         {
             var container = GetContainer<TEntity>();
 
@@ -46,7 +46,7 @@ namespace CosmosToolbox.App.Data
             string id, 
             string partitionKey,
             CancellationToken cancellationToken = default)
-            where TEntity : BaseEntity
+            where TEntity : class, IEntity
         {
             var container = GetContainer<TEntity>();
 
@@ -63,7 +63,7 @@ namespace CosmosToolbox.App.Data
         public async Task<TEntity> ReplaceItemAsync<TEntity>(
             TEntity item, 
             CancellationToken cancellationToken = default)
-            where TEntity : BaseEntity
+            where TEntity : class, IEntity
         {
             var container = GetContainer<TEntity>();
 
@@ -80,7 +80,7 @@ namespace CosmosToolbox.App.Data
         public async Task<TEntity> UpsertItemAsync<TEntity>(
             TEntity item, 
             CancellationToken cancellationToken = default)
-            where TEntity : BaseEntity
+            where TEntity : class, IEntity
         {
             var container = GetContainer<TEntity>();
 
@@ -98,7 +98,7 @@ namespace CosmosToolbox.App.Data
             string id, 
             string partitionKey, 
             CancellationToken cancellationToken = default)
-            where TEntity : BaseEntity
+            where TEntity : class, IEntity
         {
             var container = GetContainer<TEntity>();
             
@@ -116,7 +116,7 @@ namespace CosmosToolbox.App.Data
             Expression<Func<TEntity, bool>> predicate = null, 
             string partitionKey = "", 
             CancellationToken cancellationToken = default)
-            where TEntity : BaseEntity
+            where TEntity : class, IEntity
         {
             var container = GetContainer<TEntity>();
 
@@ -153,7 +153,7 @@ namespace CosmosToolbox.App.Data
             string sql, 
             string partitionKey = "", 
             CancellationToken cancellationToken = default)
-            where TEntity : BaseEntity
+            where TEntity : class, IEntity
         {
             var container = GetContainer<TEntity>();
 
@@ -184,7 +184,7 @@ namespace CosmosToolbox.App.Data
         }
         
         public async Task<IEnumerable<TEntity>> BulkCreateItemsAsync<TEntity>(IList<TEntity> entities)
-            where TEntity : BaseEntity
+            where TEntity : class, IEntity
         {
             var container = GetContainer<TEntity>();
 
@@ -198,7 +198,7 @@ namespace CosmosToolbox.App.Data
         }
 
         public async Task<IEnumerable<TEntity>> BulkUpsertItemsAsync<TEntity>(IList<TEntity> entities)
-            where TEntity : BaseEntity
+            where TEntity : class, IEntity
         {
             var container = GetContainer<TEntity>();
 
@@ -212,7 +212,7 @@ namespace CosmosToolbox.App.Data
         }
 
         public async Task<IEnumerable<TEntity>> BulkReplaceItemsAsync<TEntity>(IList<TEntity> entities)
-            where TEntity : BaseEntity
+            where TEntity : class, IEntity
         {
             var container = GetContainer<TEntity>();
 
@@ -226,7 +226,7 @@ namespace CosmosToolbox.App.Data
         }
          
         private Container GetContainer<TEntity>()
-            where TEntity : BaseEntity
+            where TEntity : class, IEntity
         {
             var database = GetDatabase();
             var props = typeof(TEntity).GetContainerProperties();
@@ -236,7 +236,7 @@ namespace CosmosToolbox.App.Data
         }
         
         private async Task<IEnumerable<TEntity>> BulkOperationAsync<TEntity>(IList<TEntity> entities, Func<TEntity, Task<ItemResponse<TEntity>>> operationFunc)
-            where TEntity : BaseEntity
+            where TEntity : class, IEntity
         {
             if (!(_options?.AllowBulkExecution ?? false))
                 throw new InvalidOperationException($"{nameof(CosmosClient.ClientOptions.AllowBulkExecution)} must be true in order to perform this operation");
@@ -262,7 +262,7 @@ namespace CosmosToolbox.App.Data
         }
 
         public async Task<Container> CreateContainerIfNotExistsAsync<TEntity>(CancellationToken cancellationToken = default)
-            where TEntity : BaseEntity
+            where TEntity : class, IEntity
         {
             var props = typeof(TEntity).GetContainerProperties();
             var container = await CreateContainerIfNotExistsAsync(props.Id, props.PartitionKeyPath, cancellationToken);

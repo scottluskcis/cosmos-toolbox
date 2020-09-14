@@ -12,28 +12,28 @@ namespace CosmosToolbox.Core.Data
             string id,
             string partitionKey,
             CancellationToken cancellationToken = default)
-            where TEntity : BaseEntity;
+            where TEntity : class, IEntity;
 
         Task<TEntity> CreateItemAsync<TEntity>(
             TEntity item,
             CancellationToken cancellationToken = default)
-            where TEntity : BaseEntity;
+            where TEntity : class, IEntity;
 
         Task<TEntity> ReplaceItemAsync<TEntity>(
             TEntity item,
             CancellationToken cancellationToken = default)
-            where TEntity : BaseEntity;
+            where TEntity : class, IEntity;
 
         Task<TEntity> UpsertItemAsync<TEntity>(
             TEntity item,
             CancellationToken cancellationToken = default)
-            where TEntity : BaseEntity;
+            where TEntity : class, IEntity;
 
         Task<TEntity> DeleteItemAsync<TEntity>(
             string id,
             string partitionKey,
             CancellationToken cancellationToken = default)
-            where TEntity : BaseEntity;
+            where TEntity : class, IEntity;
     }
     
     public interface IQueryClientContext
@@ -42,27 +42,27 @@ namespace CosmosToolbox.Core.Data
             Expression<Func<TEntity, bool>> predicate = null,
             string partitionKey = "",
             CancellationToken cancellationToken = default)
-            where TEntity : BaseEntity;
+            where TEntity : class, IEntity;
 
         Task<IEnumerable<TEntity>> QueryItemsAsync<TEntity>(
             string sql,
             string partitionKey = "",
             CancellationToken cancellationToken = default)
-            where TEntity : BaseEntity;
+            where TEntity : class, IEntity;
     }
 
     public interface IBulkExecutorClientContext
     {
         Task<IEnumerable<TEntity>> BulkCreateItemsAsync<TEntity>(
             IList<TEntity> entities)
-            where TEntity : BaseEntity;
+            where TEntity : class, IEntity;
 
         Task<IEnumerable<TEntity>> BulkReplaceItemsAsync<TEntity>(
             IList<TEntity> entities)
-            where TEntity : BaseEntity;
+            where TEntity : class, IEntity;
 
         Task<IEnumerable<TEntity>> BulkUpsertItemsAsync<TEntity>(
             IList<TEntity> entities)
-            where TEntity : BaseEntity;
+            where TEntity : class, IEntity;
     }
 }

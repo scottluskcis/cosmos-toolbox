@@ -23,7 +23,7 @@ namespace CosmosToolbox.App.Extensions
             return properties;
         }
 
-        public static PartitionKey GetPartitionKey(this BaseEntity entity)
+        public static PartitionKey GetPartitionKey(this IEntity entity)
         {
             var value = entity.GetPartitionKeyValue();
             var partitionKey = value != null ? new PartitionKey(value) : PartitionKey.Null;
