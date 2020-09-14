@@ -10,7 +10,7 @@ namespace CosmosToolbox.App.Data
 {
     public interface ITableClientContext : IClientContext
     {
-        new Task<IEnumerable<TEntity>> ReadItemsAsync<TEntity>(
+        Task<IEnumerable<TEntity>> ReadItemsAsync<TEntity>(
             Expression<Func<TEntity, bool>> predicate, string partitionKey,
             CancellationToken cancellationToken)
             where TEntity : BaseEntity, ITableEntity, new();
