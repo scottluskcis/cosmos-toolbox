@@ -1,15 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26124.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31005.135
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cosmos-toolbox", "cosmos-toolbox\cosmos-toolbox.csproj", "{2B6B645F-F4B5-4506-B5FB-308292D5CFA4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cosmos-toolbox", "cosmos-toolbox\cosmos-toolbox.csproj", "{2B6B645F-F4B5-4506-B5FB-308292D5CFA4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cosmos-toolbox-core", "cosmos-toolbox-core\cosmos-toolbox-core.csproj", "{444383EC-0226-4478-A0A4-F8B6D62AE7A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cosmos-toolbox-core", "cosmos-toolbox-core\cosmos-toolbox-core.csproj", "{444383EC-0226-4478-A0A4-F8B6D62AE7A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cosmos-toolbox-app", "cosmos-toolbox-app\cosmos-toolbox-app.csproj", "{C64FFEA7-2540-43E3-B437-C758B740842D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cosmos-toolbox-app", "cosmos-toolbox-app\cosmos-toolbox-app.csproj", "{C64FFEA7-2540-43E3-B437-C758B740842D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cosmos-toolbox-tests", "..\tests\cosmos-toolbox-tests\cosmos-toolbox-tests.csproj", "{BE2382D8-B67D-4209-8806-84C3DDAB3BDC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cosmos-toolbox-tests", "..\tests\cosmos-toolbox-tests\cosmos-toolbox-tests.csproj", "{BE2382D8-B67D-4209-8806-84C3DDAB3BDC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cosmos-toolbox-app-tests", "cosmos-toolbox-app-tests\cosmos-toolbox-app-tests.csproj", "{FBC30F09-1E86-4389-B46E-C434DF52C9E5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,9 +21,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{2B6B645F-F4B5-4506-B5FB-308292D5CFA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -72,5 +71,23 @@ Global
 		{BE2382D8-B67D-4209-8806-84C3DDAB3BDC}.Release|x64.Build.0 = Release|Any CPU
 		{BE2382D8-B67D-4209-8806-84C3DDAB3BDC}.Release|x86.ActiveCfg = Release|Any CPU
 		{BE2382D8-B67D-4209-8806-84C3DDAB3BDC}.Release|x86.Build.0 = Release|Any CPU
+		{FBC30F09-1E86-4389-B46E-C434DF52C9E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBC30F09-1E86-4389-B46E-C434DF52C9E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBC30F09-1E86-4389-B46E-C434DF52C9E5}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FBC30F09-1E86-4389-B46E-C434DF52C9E5}.Debug|x64.Build.0 = Debug|Any CPU
+		{FBC30F09-1E86-4389-B46E-C434DF52C9E5}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FBC30F09-1E86-4389-B46E-C434DF52C9E5}.Debug|x86.Build.0 = Debug|Any CPU
+		{FBC30F09-1E86-4389-B46E-C434DF52C9E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBC30F09-1E86-4389-B46E-C434DF52C9E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBC30F09-1E86-4389-B46E-C434DF52C9E5}.Release|x64.ActiveCfg = Release|Any CPU
+		{FBC30F09-1E86-4389-B46E-C434DF52C9E5}.Release|x64.Build.0 = Release|Any CPU
+		{FBC30F09-1E86-4389-B46E-C434DF52C9E5}.Release|x86.ActiveCfg = Release|Any CPU
+		{FBC30F09-1E86-4389-B46E-C434DF52C9E5}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {46EE38B6-CE17-4CF3-82D6-D5B40BAAADCE}
 	EndGlobalSection
 EndGlobal
